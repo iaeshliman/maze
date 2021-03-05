@@ -1,105 +1,140 @@
-/*
+/**
  * Author: Isaac Aeshliman
- * Date: Nov 6, 2019
- * Description: A node in a maze data structure
+ * Date: Mar 4, 2021
+ * Description:
+ *
+ * TODO: 
  */
+
 package aeshliman.maze;
 
-public class Node<T>
-{
+import java.util.HashSet;
+import java.util.Stack;
+
+public class Node
+{	
 	// Instance Variables
-	private T data;
-	private Node<T> north;
-	private Node<T> east;
-	private Node<T> south;
-	private Node<T> west;
-	
-	
+	private int col;
+	private int row;
+	private Node[] adjacent;
 	
 	// Constructors
-	public Node()
+	public Node(int col, int row)
 	{
-		this.data = null;
-		this.north = null;
-		this.east = null;
-		this.south = null;
-		this.west = null;
+		this.col = col;
+		this.row = row;
 	}
 	
-	public Node(T data)
+	public Node(int col, int row, Node[] adjacent)
 	{
-		this.data = data;
-		this.north = null;
-		this.east = null;
-		this.south = null;
-		this.west = null;
+		this.col = col;
+		this.row = row;
+		for(int i=0; i<adjacent.length; i++) this.adjacent[i] = adjacent[i];
 	}
 	
-	
-	
-	// Getters
-	public T getData()
 	{
-		return this.data;
+		adjacent = new Node[Direction.values().length];
+		adjacent[Direction.NORTH.value] = null;
+		adjacent[Direction.EAST.value] = null;
+		adjacent[Direction.SOUTH.value] = null;
+		adjacent[Direction.WEST.value] = null;
 	}
 	
-	public Node<T> getNorth()
-	{
-		return this.north;
-	}
+	// Getters and Setters
+	public int getCol() { return this.col; }
+	public int getRow() { return this.row; }
+	public Node[] getAdjacent() { return adjacent; }
+	public Node getNorth() { return adjacent[Direction.NORTH.value]; }
+	public Node getEast() { return adjacent[Direction.EAST.value]; }
+	public Node getSouth() { return adjacent[Direction.SOUTH.value]; }
+	public Node getWest() { return adjacent[Direction.WEST.value]; }
 	
-	public Node<T> getEast()
-	{
-		return this.east;
-	}
-	
-	public Node<T> getSouth()
-	{
-		return this.south;
-	}
-	
-	public Node<T> getWest()
-	{
-		return this.west;
-	}
-	
-	
-	
-	// Setters
-	public void setData(T data)
-	{
-		this.data = data;
-	}
-	
-	public void setNorth(Node<T> node)
-	{
-		this.north = node;
-	}
-	
-	public void setEast(Node<T> node)
-	{
-		this.east = node;
-	}
-	
-	public void setSouth(Node<T> node)
-	{
-		this.south = node;
-	}
-	
-	public void setWest(Node<T> node)
-	{
-		this.west = node;
-	}
-	
-	
+	public void setNorth(Node node) { adjacent[Direction.NORTH.value] = node; }
+	public void setEast(Node node) { adjacent[Direction.EAST.value] = node; }
+	public void setSouth(Node node) { adjacent[Direction.SOUTH.value] = node; }
+	public void setWest(Node node) { adjacent[Direction.WEST.value] = node; }
 	
 	// Operations
+	public Stack<Node> solve(HashSet<Node> visited, Node goal) // solves depth first, need to fix for breadth first
+	{
+		// If the finish was found, add this node to the path and return
+		if(this==goal)
+		{
+			Stack<Node> path = new Stack<Node>();
+			path.add(this);
+			return path;
+		}
+		// If there are no more nodes that can be visited return null
+		else if(!this.canVisit(visited)) { return null; }
+		// If there are more nodes to visit recursively visit each appending newly visited node
+		else
+		{
+			Stack<Node> path = null;
+			if(getNorth()!=null&&!visited.contains(getNorth())) // Visit north node
+			{
+				visited.add(getNorth());
+				Stack<Node> temp = getNorth().solve(visited,goal); // Recursively visit every node depth first
+				if(temp!=null) // If a path was found append this node and return path
+				{
+					if(path==null||temp.size()<path.size())
+					{
+						path = temp;
+						path.add(this);
+					}
+				}
+			}
+			if(getEast()!=null&&!visited.contains(getEast())) // Visit east node
+			{
+				visited.add(getEast());
+				Stack<Node> temp = getEast().solve(visited,goal);
+				if(temp!=null)
+				{
+					if(path==null||temp.size()<path.size())
+					{
+						path = temp;
+						path.add(this);
+					}
+				}
+			}
+			if(getSouth()!=null&&!visited.contains(getSouth())) // Visit south node
+			{
+				visited.add(getSouth());
+				Stack<Node> temp = getSouth().solve(visited,goal);
+				if(temp!=null)
+				{
+					if(path==null||temp.size()<path.size())
+					{
+						path = temp;
+						path.add(this);
+					}
+				}
+			}
+			if(getWest()!=null&&!visited.contains(getWest())) // Visit west node
+			{
+				visited.add(getWest());
+				Stack<Node> temp = getWest().solve(visited,goal);
+				if(temp!=null)
+				{
+					if(path==null||temp.size()<path.size())
+					{
+						path = temp;
+						path.add(this);
+					}
+				}
+			}
+			return path;
+		}
+	}
 	
-	
+	public boolean canVisit(HashSet<Node> visited)
+	{
+		for(Node node : adjacent) { if(!visited.contains(node)) return true; }
+		return false;
+	}
 	
 	// toString
 	public String toString()
 	{
-		return this.data.toString();
+		return "Column " + col + " - Row " + row;
 	}
 }
