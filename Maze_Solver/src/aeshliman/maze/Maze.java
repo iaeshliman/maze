@@ -72,8 +72,6 @@ public class Maze
 		n11.setNorth(n8);
 		n11.setEast(finish);
 		finish.setWest(n11);
-		
-		n1.setWest(finish);
 	}
 	
 	// Getters and Setters
@@ -212,6 +210,8 @@ public class Maze
 			
 			start = grid.get(startY).get(startX);
 			finish = grid.get(endY).get(endX);
+			rows = grid.size();
+			cols = grid.get(0).size();
 		}
 		catch(FileNotFoundException e) { e.printStackTrace(); }
 	}

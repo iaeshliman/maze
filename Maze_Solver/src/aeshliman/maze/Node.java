@@ -73,7 +73,8 @@ public class Node
 			if(getNorth()!=null&&!visited.contains(getNorth())) // Visit north node
 			{
 				visited.add(getNorth());
-				Stack<Node> temp = getNorth().solve(visited,goal); // Recursively visit every node depth first
+				HashSet<Node> copy = new HashSet<Node>(visited);
+				Stack<Node> temp = getNorth().solve(copy,goal); // Recursively visit every node depth first
 				if(temp!=null) // If a path was found append this node and return path
 				{
 					if(path==null||temp.size()<path.size())
@@ -86,7 +87,8 @@ public class Node
 			if(getEast()!=null&&!visited.contains(getEast())) // Visit east node
 			{
 				visited.add(getEast());
-				Stack<Node> temp = getEast().solve(visited,goal);
+				HashSet<Node> copy = new HashSet<Node>(visited);
+				Stack<Node> temp = getEast().solve(copy,goal);
 				if(temp!=null)
 				{
 					if(path==null||temp.size()<path.size())
@@ -99,7 +101,8 @@ public class Node
 			if(getSouth()!=null&&!visited.contains(getSouth())) // Visit south node
 			{
 				visited.add(getSouth());
-				Stack<Node> temp = getSouth().solve(visited,goal);
+				HashSet<Node> copy = new HashSet<Node>(visited);
+				Stack<Node> temp = getSouth().solve(copy,goal);
 				if(temp!=null)
 				{
 					if(path==null||temp.size()<path.size())
@@ -112,7 +115,8 @@ public class Node
 			if(getWest()!=null&&!visited.contains(getWest())) // Visit west node
 			{
 				visited.add(getWest());
-				Stack<Node> temp = getWest().solve(visited,goal);
+				HashSet<Node> copy = new HashSet<Node>(visited);
+				Stack<Node> temp = getWest().solve(copy,goal);
 				if(temp!=null)
 				{
 					if(path==null||temp.size()<path.size())

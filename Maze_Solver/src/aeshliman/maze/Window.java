@@ -120,6 +120,7 @@ public class Window
 	private void initializeGrid()
 	{
 		grid = new JLabel[maze.getRows()][maze.getCols()];
+		mazePanel.setLayout(new GridLayout(maze.getRows(), maze.getCols(), 0, 0));
 		for(int i=0; i<grid.length; i++)
 		{
 			for(int j=0; j<grid[i].length; j++)
